@@ -31,15 +31,16 @@ up_corner = corners["upperCorner"].split()
 # Долгота и широта:
 toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
 
+toponym_longitude = float(toponym_longitude)
+toponym_lattitude = float(toponym_lattitude)
+
 
 object_x = object_delta(toponym)[0]
 object_y = object_delta(toponym)[1]
 
 map_params = {
-    "ll": ",".join([toponym_longitude, toponym_lattitude]),
+    "ll": ",".join([str(i) for i in (toponym_longitude, toponym_lattitude)]),
     "l": "map",
-    "pt": f"{toponym_coodrinates.split()[0]},{toponym_coodrinates.split()[1]},"
-          f"pm2vvm",
     "z": 16,
 }
 
@@ -81,10 +82,20 @@ while running:
             if event.key == pygame.K_PAGEUP:
                 print('hello')
                 map_params["z"] += 1
-                refresh()
             elif event.key == pygame.K_PAGEDOWN:
                 map_params["z"] -= 1
-                refresh()
+            elif event.key == pygame.K_RIGHT:
+                toponym_longitude += 0.002
+                map_params["ll"] = ",".join([str(i) for i in (toponym_longitude, toponym_lattitude)])
+            elif event.key == pygame.K_LEFT:
+                toponym_longitude -= 0.002
+                map_params["ll"] = ",".join([str(i) for i in (toponym_longitude, toponym_lattitude)])
+            elif event.key == pygame.K_DOWN:
+                toponym_lattitude -= 0.002
+                map_params["ll"] = ",".join([str(i) for i in (toponym_longitude, toponym_lattitude)])
+            elif event.key == pygame.K_UP:
+                toponym_lattitude += 0.002
+                map_params["ll"] = ",".join([str(i) for i in (toponym_longitude, toponym_lattitude)])
     refresh()
     # Переключаем экран и ждем закрытия окна.
     pygame.display.flip()
